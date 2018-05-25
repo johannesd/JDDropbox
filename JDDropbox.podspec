@@ -3,6 +3,7 @@ Pod::Spec.new do |s|
   s.version      = "0.0.1"
   s.summary      = "JDDropbox"
   s.description  = <<-DESC
+    JDDropbox
                    DESC
   s.homepage     = "https://github.com/johannesd/JDDropbox.git"
   s.license      = { 
@@ -15,14 +16,16 @@ Pod::Spec.new do |s|
     LICENSE
   }
   s.author       = { "Johannes Doerr" => "mail@johannesdoerr.de" }
+  s.source       = { :git => "https://github.com/johannesd/JDDropbox.git" }
   s.platform     = :ios, '5.0'
   s.source_files  = '*.{h,m}'
 
   s.exclude_files = 'Classes/Exclude'
   s.requires_arc = true
 
-  s.frameworks = 'Dropbox'
-  s.dependency 'Dropbox-Sync-API-SDK'
-  s.xcconfig = { 'FRAMEWORK_SEARCH_PATHS' => '"${PODS_ROOT}/Dropbox-Sync-API-SDK/dropbox-ios-sync-sdk-3.1.2"' }  
+  s.dependency 'ObjectiveDropboxOfficial'
+  s.dependency 'Reachability'
+  s.dependency 'BlocksKit'
+  s.dependency 'JDCategories'
 
 end
