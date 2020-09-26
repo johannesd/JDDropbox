@@ -162,7 +162,7 @@ NSString * const JDOfflineDropboxFolderChangedNotification = @"JDOfflineDropboxF
                      }
                      [weakObsoleteFilePaths removeAllObjects];
                      
-                     [[client.filesRoutes listFolderLongpoll:result.cursor] setResponseBlock:^(DBFILESListFolderResult * _Nullable result, DBFILESListFolderError * _Nullable routeError, DBRequestError * _Nullable networkError) {
+                     [[client.filesRoutes listFolderLongpoll:result.cursor] setResponseBlock:^(DBFILESListFolderLongpollResult * _Nullable result, DBFILESListFolderLongpollError * _Nullable routeError, DBRequestError * _Nullable networkError) {
                          if (!routeError && !networkError) {
                              // Sync when there are changes
                              [weakSelf performSync];
