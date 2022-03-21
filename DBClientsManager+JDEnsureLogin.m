@@ -11,6 +11,7 @@
 static NSMutableArray *blocksToPerformAfterLogin;
 static NSMutableArray *blocksToPerformWhenLogin;
 static BOOL performingLogin;
+static BOOL invalidateLogin;
 static dispatch_queue_t clockQueue;
 
 
@@ -32,9 +33,15 @@ static dispatch_queue_t clockQueue;
                                                   [[UIApplication sharedApplication] openURL:url];
                                               }];
             performingLogin = TRUE;
+            invalidateLogin = FALSE;
         }
         [blocksToPerformAfterLogin addObject:block];
     }
+}
+
++ (void)invalidateLogin
+{
+    invalidateLogin = TRUE;
 }
 
 + (void)whenLogin:(DBClientsManagerWhenLoginBlockType)block
@@ -54,7 +61,7 @@ static dispatch_queue_t clockQueue;
 {
     BOOL loggedIn = [DBClientsManager authorizedClient] != nil;
 //    NSLog(@"logged in? %@", loggedIn ? @"YES" : @"NO");
-    return loggedIn;
+    return loggedIn && !invalidateLogin;
 }
 
 + (dispatch_queue_t)backgroundQueue

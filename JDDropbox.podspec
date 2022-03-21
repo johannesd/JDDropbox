@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "JDDropbox"
-  s.version      = "0.0.2"
+  s.version      = "0.0.3"
   s.summary      = "JDDropbox"
   s.description  = <<-DESC
     JDDropbox

@@ -16,6 +16,7 @@ typedef void (^DBClientsManagerWhenLoginBlockType)();
 
 + (void)ensureLogin:(DBClientsManagerEnsureLoginBlockType)block withViewController:(UIViewController *)viewController;
 + (void)whenLogin:(DBClientsManagerWhenLoginBlockType)block;
++ (void)invalidateLogin;
 + (BOOL)isLoggedIn;
 + (dispatch_queue_t)backgroundQueue;
 + (void)handleOpenURL;

@@ -55,6 +55,14 @@ NSString * const JDOfflineDropboxFolderChangedNotification = @"JDOfflineDropboxF
     [self performSelector:@selector(syncRestart:) withObject:@FALSE afterDelay:0];
 }
 
+- (void)accessDenied
+{
+    [DBClientsManager invalidateLogin];
+    [DBClientsManager whenLogin:^{
+        [self syncRestart:@TRUE];
+    }];
+}
+
 - (void)syncRestart:(NSNumber *)restart
 {
     if ([DBClientsManager isLoggedIn]) {
@@ -83,6 +91,9 @@ NSString * const JDOfflineDropboxFolderChangedNotification = @"JDOfflineDropboxF
         __weak NSMutableDictionary<NSString *, DBDownloadUrlTask *> *weakDownloadTasks = downloadTasks;
         __weak NSMutableArray<NSString *> *weakObsoleteFilePaths = obsoleteFilePaths;
         [listFolderTask setResponseBlock:^(DBFILESListFolderResult * _Nullable result, DBFILESListFolderError * _Nullable routeError, DBRequestError * _Nullable networkError) {
+             if (networkError != nil && networkError.statusCode.intValue == 401) {
+                 [self accessDenied];
+             }
              if (!routeError && !networkError) {
                  listFolderCursor = result.cursor;
                  for (DBFILESMetadata *entry in result.entries) {
@@ -101,6 +112,9 @@ NSString * const JDOfflineDropboxFolderChangedNotification = @"JDOfflineDropboxF
                          DBDownloadUrlTask *downloadTask = [client.filesRoutes downloadUrl:entry.pathDisplay overwrite:TRUE destination:localFileURL];
                          NSString *taskKey = entry.pathDisplay;
                          [downloadTask setResponseBlock:^(DBFILESFileMetadata * _Nullable result, DBFILESDownloadError * _Nullable routeError, DBRequestError * _Nullable networkError, NSURL * _Nonnull destination) {
+                             if (networkError != nil && networkError.statusCode.intValue == 401) {
+                                 [self accessDenied];
+                             }
                              if (!routeError && !networkError) {
                                  if (isNewFile) {
                                      NSLog(@"Added file: %@", path);
@@ -163,6 +177,9 @@ NSString * const JDOfflineDropboxFolderChangedNotification = @"JDOfflineDropboxF
                      [weakObsoleteFilePaths removeAllObjects];
                      
                      [[client.filesRoutes listFolderLongpoll:result.cursor] setResponseBlock:^(DBFILESListFolderLongpollResult * _Nullable result, DBFILESListFolderLongpollError * _Nullable routeError, DBRequestError * _Nullable networkError) {
+                         if (networkError != nil && networkError.statusCode.intValue == 401) {
+                             [self accessDenied];
+                         }
                          if (!routeError && !networkError) {
                              // Sync when there are changes
                              [weakSelf performSync];
