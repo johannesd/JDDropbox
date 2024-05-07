@@ -23,7 +23,7 @@ Pod::Spec.new do |s|
   s.exclude_files = 'Classes/Exclude'
   s.requires_arc = true
 
-  s.dependency 'ObjectiveDropboxOfficial'
+  s.dependency 'ObjectiveDropboxOfficial', '6.2.3'
   s.dependency 'Reachability'
   s.dependency 'BlocksKit'
   s.dependency 'JDCategories'
